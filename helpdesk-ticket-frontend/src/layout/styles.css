@@ -1,0 +1,73 @@
+
+.container {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: azure;
+}
+
+.container img {
+    width: 15vh;
+}
+
+
+.menu {
+    height: 60px;
+    background-color: azure;
+    color: #E91E76;
+    font-size: 24px;
+}
+
+
+/* เมื่อหน้าจอกว้างมากกว่าหรือเท่ากับ 500px */
+
+@media (min-width: 500px) {
+    .menu {
+        display: block;
+        height: 60px;
+        background-color: azure;
+        color: #E91E76;
+        font-size: 24px;
+    }
+    .menuHamburger {
+        display: none;
+    }
+}
+
+/* เมื่อหน้าจอกว้างน้อยกว่า 500px */
+@media (max-width: 499px) {
+    .container {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        height: 60px;
+        background-color: azure;
+    }
+    .menuHamburger {
+        display: block;
+        position: absolute;
+        top: 1vh;
+        left: 2vh;
+    }
+    .containerHamburgerMenu{
+        position: relative;
+        padding: 0px 5px;
+        background-color: azure;
+    }
+    .containerHamburgerMenu img{
+        margin-left: 50px;
+        width: 15vh;
+    }
+    .menuInHamburger{
+        height: 5vh;
+        background-color: azure;
+        color: #E91E76;
+        font-size: 24px;
+    }
+    .menu {
+        display: none;
+    }
+}
