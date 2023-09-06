@@ -1,9 +1,7 @@
 import React from 'react'
 import '../App.css'
-import { Form, Button, Input, InputNumber, Divider, Card, Col, Row,  } from 'antd'
+import { Form, Button, Input, InputNumber, Divider, Card, Col, Row, Table } from 'antd'
 import TableTicket from '../components/TableTicket';
-
-
 const layout = {
     labelCol: {
         span: 8,

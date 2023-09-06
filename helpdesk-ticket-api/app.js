@@ -2,12 +2,10 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-
-const adminRoute = require('./routes/Admin')
-
-
 const app = express()
 const PORT = 5000
+
+const adminRoute = require('./routes/Admin')
 
 app.use(cors())
 app.use(express.json())

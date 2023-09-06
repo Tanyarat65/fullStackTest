@@ -3,35 +3,35 @@ const router = express.Router()
 const pool = require('../helper/connectApi')
 
 
-// GET all tickets
-router.get('/ticket', (req, res)=>{
-    pool.query('SELECT * FROM ticket', (err, result) => {
-        if(err)  {
-            console.log(err)
-        }else {
-            res.send(result)
-        }
-    })
-})
-
-// GET a single ticket by ID
-router.get('/tickets/:id', (req, res) => {
+// GET a single ticket by ID and all tickets
+router.get('/tickets/:id?', (req, res) => {
     const ticketId = req.params.id
-    pool.query('SELECT * FROM ticket WHERE id = ?', [ticketId], (err, result) => {
-        if (err) {
-            console.log(err)
-            res.status(500).send('Internal Server Error')
-        } else if (result.length === 0) {
-            res.status(404).send('Ticket not found')
-        } else {
-            res.json(result[0])
-        }
-    })
+    console.log();
+    if(ticketId){
+        pool.query('SELECT * FROM ticket WHERE id = ?', [ticketId], (err, result) => {
+            if (err) {
+                console.log(err)
+                res.status(500).send('Internal Server Error')
+            } else if (result.length === 0) {
+                res.status(404).send('Ticket not found')
+            } else {
+                res.json(result[0])
+            }
+        })
+    }else{
+        pool.query('SELECT * FROM ticket', (err, result) => {
+            if(err)  {
+                console.log(err)
+            }else {
+                res.send(result)
+            }
+        })
+    }
 })
 
 // POST a new ticket
 router.post('/createTickets', (req, res) => {
-    const newTicket = 
+    const newTicket =
     {
         ticket_id: req.body.ticket_id,
         tittle: req.body.tittle,
