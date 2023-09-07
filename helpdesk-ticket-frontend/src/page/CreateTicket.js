@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../App.css'
 import { Form, Button, Input, InputNumber, Divider, Card, Col, Row,  } from 'antd'
+import Swal from 'sweetalert2'
 import TableTicket from '../components/TableTicket';
+import configApi from '../helper/configApi';
+import { useNavigate } from 'react-router-dom';
+// import padWithLeadingZeros from '../helper/padWithLeadingZeros';
 
 
 const layout = {
     labelCol: {
         span: 8,
     },
-    wrapperCol: {
+    wrapperRow: {
         span: 16,
     },
 };
@@ -28,16 +32,66 @@ const validateMessages = {
 
 const { TextArea } = Input
 
-const onFinish = (values) => {
-    console.log(values)
-};
 
 
+
+// padWithLeadingZeros((5,(data.length + 1))
 export default function CreateTicket() {
+
+    // const [ticketId, setTicketId] = useState('')
+    // let tk = ''
+
+    // useEffect(()=>{
+
+    //     const createTicketId = async() => {
+    //         const pathUrl = 'tickets'
+    //         const data = await configApi('get',pathUrl)
+    //         const ticket = data.length + 1
+    //         return ticket
+    //     }
+
+    //     setTicketId(createTicketId)
+    // },[])
+
+    // if (ticketId !== ''){
+    //     tk = ticketId
+    // }else{
+    //     tk = 'auto add ticketId'
+    // }
+    const navigate = useNavigate()
+
+    const onFinish = async (values) => {
+        const data = {...values.user,status:'pending'}
+        // console.log(data);
+        const pathUrl = 'createTickets'
+
+        const res = await configApi('post',pathUrl,data)
+
+        if(res.status === "500"){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: '<a href="">Why do I have this issue?</a>'
+            })
+            navigate('/')
+        }else{
+            Swal.fire({
+                position: 'top-left',
+                icon: 'success',
+                title: 'Your work has been saved',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            navigate('/')
+        }
+
+    };
+
     return (
         <div className='containerPage'>
-            <Row justify='center' gutter={8}>
-                <Col>
+            <Row justify='center' align='middle' gutter={8}>
+                <Col xs={24} xl={12}  align='middle'>
                     <Card title="Helpdesk Support Ticket" bordered={false} style={{ padding: '9' }}>
                         <Form
                             {...layout}
@@ -48,109 +102,133 @@ export default function CreateTicket() {
                             }}
                             validateMessages={validateMessages}
                         >
-                            <Form.Item
-                                name={['user', 'Ticket']}
-                                label="Ticket No"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-                            <Form.Item
-                                name={['user', 'tittle']}
-                                label="Tittle"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-                            <Form.Item
-                                name={['user', 'description']}
-                                label="Description"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <TextArea rows={4} />
-                            </Form.Item>
+                            <Row>
+                                <Col xs={24} xl={12}>
+                                    <Form.Item
+                                        name={['user', 'ticket_id']}
+                                        label="Ticket No"
+                                        // initialValue={tk}
+                                        rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name={['user', 'tittle']}
+                                        label="Tittle"
+                                        rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                </Col>
+                                <Col xs={24} xl={12}>
+                                    <Form.Item
+                                        name={['user', 'description']}
+                                        label="Description"
+                                        rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}
+                                    >
+                                        <TextArea rows={4} />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+
                             <Divider orientation="left">Contact</Divider>
-                            <Form.Item
-                                name={['user', 'email']}
-                                label="Email"
-                                rules={[
-                                    {
-                                        type: 'email',
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <Input />
-                            </Form.Item>
-                            <Form.Item
-                                name={['user', 'name']}
-                                label="Name"
-                                rules={[
-                                    {
-                                        type: 'name',
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <Input type='text'/>
-                            </Form.Item>
-                            <Form.Item
-                                name={['user', 'age']}
-                                label="Age"
-                                rules={[
-                                    {
-                                        type: 'number',
-                                        min: 0,
-                                        max: 99,
-                                    },
-                                ]}
-                            >
-                                <InputNumber />
-                            </Form.Item>
-                            <Form.Item
-                                name={['user', 'phone']} 
-                                label="Phone"
-                                rules={[
-                                    {
-                                        type: 'phone',
-                                        required: true,
-                                        pattern: /^[\d]{0,9}$/,
-                                        message: "Value should be less than 999999999",
-                                    },
-                                ]}
-                            >
-                                <Input type='number' />
-                            </Form.Item>
-                            <Form.Item
-                                wrapperCol={{
-                                    ...layout.wrapperCol,
-                                    offset: 8,
-                                }}
-                            >
-                                <Button style={{ background: '#E91E76' }} htmlType="submit">
-                                    Submit
-                                </Button>
-                            </Form.Item>
+                            <Row>
+                                <Col xs={24} xl={12}>
+                                    <Form.Item
+                                        name={['user', 'name']}
+                                        label="Name"
+                                        rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}
+                                    >
+                                        <Input type='text'/>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name={['user', 'age']}
+                                        label="Age"
+                                        rules={[
+                                            {
+                                                types: 'number',
+                                                label: 'number',
+                                                required: true,
+                                                pattern: /^(?:[5-9]|[1-9][0-9])$/,
+                                                message: 'Value should be 50-99 not available ',
+                                                min:5,
+                                                max:99,
+                                            },
+                                        ]}
+                                    >
+                                        <Input type='number'/>
+                                    </Form.Item>
+                                </Col>
+                                
+                                <Col xs={24} xl={12}>
+                                    <Form.Item
+                                        name={['user', 'email']}
+                                        label="Email"
+                                        rules={[
+                                            {
+                                                type: 'email',
+                                                required: true,
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name={['user', 'phone']}
+                                        label="Phone"
+                                        rules={[
+                                            {
+                                            required: true,
+                                            pattern: /^0\d{0,9}$/,
+                                            message: 'Value should be a valid phone number starting with 0 and not exceeding 10 digits.',
+                                            },
+                                        ]}
+                                    >
+                                        <Input type='number' />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row justify={'center'}>
+                                <Col xs={24} xl={12} >
+                                    <Form.Item
+                                        wrapperCol={{
+                                            ...layout.wrapperCol,
+                                        }}
+                                    >
+                                        <Button 
+                                            style={{ background: '#E91E76', width: '100%'}}
+                                            htmlType="submit"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
                         </Form>
                     </Card>
                 </Col>
-                <Col>
-                    <Card title="Table Ticket" bordered={false} style={{}}>
-                        <TableTicket />
+                {/* <Col xs={24} xl={20}>
+                    <Card title="Table Ticket" bordered={false} style={{overflow: 'auto'}}>
+                        <TableTicket data={res}/>
                     </Card>
-                </Col>
+                </Col> */}
             </Row>
         </div>
     )

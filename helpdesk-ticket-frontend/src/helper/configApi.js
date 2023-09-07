@@ -1,3 +1,4 @@
+import { message } from 'antd'
 import axios from 'axios'
 
 const configApi = async (method, path,data) => {
@@ -7,8 +8,8 @@ const configApi = async (method, path,data) => {
 
     switch(method){
         case 'get' : return await getMethod(method,url)
-        case 'post' : return await postMethod(method,url)
-        case 'put' : return await putMethod(method,url)
+        case 'post' : return await postMethod(method,url,data)
+        case 'put' : return await putMethod(method,url,data)
         default : break;
     }
 }
@@ -18,14 +19,16 @@ const getMethod = async (method, url) => {
         method , url
     })
     try{
-        return res.data
+        return (res.data)
     }
     catch(err){
         console.log(res.status,err);
+        return (res.status,err);
     }
 }
 
 const postMethod = async (method, url, data) => {
+    console.log('configApi data',data);
     const res = await axios({
         method , url, data
     })

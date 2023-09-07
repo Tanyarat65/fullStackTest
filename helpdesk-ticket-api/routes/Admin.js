@@ -11,17 +11,20 @@ router.get('/tickets/:id?', (req, res) => {
         pool.query('SELECT * FROM ticket WHERE id = ?', [ticketId], (err, result) => {
             if (err) {
                 console.log(err)
-                res.status(500).send('Internal Server Error')
+                res.status(500).json({status: '500', message: `Internal Server Error is ${err}`})
             } else if (result.length === 0) {
-                res.status(404).send('Ticket not found')
+                res.status(404).json({status: '404', message: `Ticket not found ${err}`})
             } else {
-                res.json(result[0])
+                res.send(result[0])
             }
         })
     }else{
         pool.query('SELECT * FROM ticket', (err, result) => {
             if(err)  {
                 console.log(err)
+                res.status(500).json({status: '500', message: `Internal Server Error is ${err}`})
+            } else if (result.length === 0) {
+                res.status(404).json({status: '404', message: `Ticket not found ${err}`})
             }else {
                 res.send(result)
             }
@@ -31,6 +34,7 @@ router.get('/tickets/:id?', (req, res) => {
 
 // POST a new ticket
 router.post('/createTickets', (req, res) => {
+    console.log(req.body);
     const newTicket =
     {
         ticket_id: req.body.ticket_id,
@@ -45,10 +49,9 @@ router.post('/createTickets', (req, res) => {
 
     pool.query('INSERT INTO ticket SET ?', newTicket, (err, result) => {
         if (err) {
-            console.log(err)
-            res.status(500).send('Internal Server Error is ' + err)
+            res.status(500).json({status: '500', message: `Internal Server Error is ${err}` })
         } else {
-            res.status(201).json({ message: 'Ticket created successfully', id: result.insertId })
+            res.status(201).json({status: '200', message: 'Ticket created successfully'})
         }
     })
 })

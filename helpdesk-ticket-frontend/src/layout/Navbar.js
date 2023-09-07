@@ -47,7 +47,7 @@ function AppMenu({isInline=false}) {
                         label: 'Home',
                         key: 'home',
                         onClick: ()=>{
-                            navigate('/home')
+                            navigate('/')
                         }
                     },
                     {
