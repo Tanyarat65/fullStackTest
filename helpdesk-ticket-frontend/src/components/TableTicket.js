@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react'
-import { Table, Tag } from 'antd'
-import { EditFilled, CheckOutlined , RollbackOutlined, LoginOutlined } from '@ant-design/icons'
+import { Table, Tag, Button } from 'antd'
+import { EditFilled, CheckOutlined , RollbackOutlined, SortAscendingOutlined } from '@ant-design/icons'
 import Swal from 'sweetalert2'
 
 import { useDispatch } from 'react-redux'
@@ -17,16 +17,20 @@ export default function TableTicket() {
 
     const [dataSource, setDataSource] = useState([])
     const [status, setStatus] = useState('')
+
     const columns =[
         {
             title: 'Ticket No.',
             dataIndex: 'ticket_id',
             key: 'key',
+            sorter: (a, b) => a.ticket_id.localeCompare(b.ticket_id),
+
         },
         {
             title: 'Tittle',
             dataIndex: 'tittle',
             key: 'key',
+            sorter: (a, b) => a.tittle.localeCompare(b.tittle),
         },
         {
             title: 'Description',
@@ -37,11 +41,13 @@ export default function TableTicket() {
             title: 'Name',
             dataIndex: 'name',
             key: 'key',
+            sorter: (a, b) => a.name.localeCompare(b.name),
         },
         {
             title: 'age',
             dataIndex: 'age',
             key: 'key',
+            sorter: (a, b) => a.age - b.age,
         },
         {
             title: 'email',
@@ -57,7 +63,31 @@ export default function TableTicket() {
             title: 'status',
             dataIndex: 'status',
             key: 'key',
-            render:(tag)=>{
+            filters: [
+                {
+                    text: 'pending',
+                    value: 'pending',
+                },
+                {
+                    text: 'accepted',
+                    value: 'accepted',
+                },
+                {
+                    text: 'resolved',
+                    value: 'resolved',
+                },
+                {
+                    text: 'rejected',
+                    value: 'rejected',
+                },
+            ],
+            sorter: (a, b) => a.status.localeCompare(b.status),
+            onFilter: (value, record) => {
+                // console.log('record:', record.status);
+                // console.log('value:', value);
+                return record.status === value
+            },
+            render:(tag) => {
                 const color = 
                     tag.includes('pending')
                     ?'gray'
@@ -73,11 +103,15 @@ export default function TableTicket() {
             title: 'created_at',
             dataIndex: 'created_at',
             key: 'key',
+            sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+            ellipsis: true,
         },
         {
             title: 'updated_at',
             dataIndex: 'updated_at',
             key: 'key',
+            sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
+            ellipsis: true,
         },
         {
             title: 'Action',
@@ -155,13 +189,13 @@ export default function TableTicket() {
             navigate('/')
         }else{
             Swal.fire({
-                position: 'top-left',
+                position: 'center',
                 icon: 'success',
                 title: 'Your work has been saved',
                 showConfirmButton: false,
                 timer: 1500
             })
-            setStatus('resolved')
+            status === ''? setStatus('resolved') : setStatus('')
         }
     }
     const onClickRejected = async (record) => {
@@ -180,23 +214,24 @@ export default function TableTicket() {
             navigate('/')
         }else{
             Swal.fire({
-                position: 'top-left',
+                position: 'center',
                 icon: 'success',
                 title: 'Your work has been saved',
                 showConfirmButton: false,
                 timer: 1500
             })
-            setStatus('rejected')
+            status === ''? setStatus('resolved') : setStatus('')
         }
     }
  
 
     return (
-        <Table
-            pagination = {true}
-            columns = {columns}
-            dataSource = {dataSource}
-        >
-        </Table>
+            <Table
+                pagination = {true}
+                columns = {columns}
+                dataSource = {dataSource}
+                // onChange={handleChange}
+            >
+            </Table>
     )
 }
